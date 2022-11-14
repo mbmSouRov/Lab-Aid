@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import img1 from "../../../assets/images/doctor-small.png";
 import GradientButton from "../../SimilarDesign/Button/GradientButton";
 const MakeAppointment = () => {
@@ -19,7 +20,9 @@ const MakeAppointment = () => {
             here', making it look like readable English. Many desktop publishing
             packages and web page
           </p>
-          <GradientButton>Get Started</GradientButton>
+          <Link to={"/appointment"}>
+            <GradientButton>Get Started</GradientButton>
+          </Link>
         </div>
       </div>
     </section>
