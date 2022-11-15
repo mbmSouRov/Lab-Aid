@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import chair from "../../../assets/images/chair.png";
 import { DayPicker } from "react-day-picker";
 import { format } from "date-fns";
-const AppointmentBanner = () => {
-  const [selectedDate, setSelectedDate] = useState(new Date());
+const AppointmentBanner = ({ selectedDate, setSelectedDate }) => {
   return (
     <div className="hero200">
       <div className="hero-content flex-col lg:flex-row-reverse justify-evenly">
@@ -14,12 +13,14 @@ const AppointmentBanner = () => {
         />
         <div>
           <DayPicker
-            className="rounded-lg shadow-lg bg-base-100 p-10 font-light"
+            className="max-w-sm rounded-lg shadow-lg bg-base-100 p-4 lg:p-10 font-light"
             mode="single"
             selected={selectedDate}
             onSelect={setSelectedDate}
           />
-          <p>Selected Day: {format(selectedDate, "PPPP")}</p>
+          <p className="overflow-x-auto p-5">
+            Selected Day: {format(selectedDate, "PPPP")}
+          </p>
         </div>
       </div>
     </div>
