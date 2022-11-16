@@ -1,16 +1,29 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
-
+import { AuthContext } from "../../contexts/AuthProvider";
+import toast from "react-hot-toast";
 const Signup = () => {
+  const { createUser } = useContext(AuthContext);
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-
-  const handleSignup = (data) => {
+  const [signupError, setSignupError] = useState("");
+  const handleSignup = (data, e) => {
     console.log(data);
+    createUser(data.email, data.password)
+      .then((Result) => {
+        setSignupError("");
+        console.log(Result);
+        e.target.reset();
+        toast.success("Successfully Created!");
+      })
+      .catch((err) => {
+        console.log(err.message);
+        setSignupError(err.message);
+      });
   };
 
   return (
@@ -62,6 +75,11 @@ const Signup = () => {
                   value: 6,
                   message: "Password must be 6 characters or longer",
                 },
+                pattern: {
+                  value: /(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])/,
+                  message:
+                    "Password must have uppercase, number and special characters",
+                },
               })}
             />
             {errors.password && (
@@ -70,6 +88,7 @@ const Signup = () => {
               </span>
             )}
           </div>
+          {signupError && <p className="text-red-600">{signupError}</p>}
           <input
             className="btn btn-accent w-full my-5"
             value="Signup"
