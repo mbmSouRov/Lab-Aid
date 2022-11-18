@@ -30,7 +30,7 @@ const Navbar = () => {
             <Link to={"/dashboard"}>Dashboard</Link>
           </li>
           <li>
-            <p>{user.email.slice(0, 5)}</p>
+            <p>{user?.displayName}</p>
           </li>
         </>
       )}

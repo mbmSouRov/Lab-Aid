@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthProvider";
 import toast from "react-hot-toast";
 const Signup = () => {
-  const { createUser } = useContext(AuthContext);
+  const { createUser, updateUser } = useContext(AuthContext);
   const {
     register,
     handleSubmit,
@@ -13,9 +13,11 @@ const Signup = () => {
   const [signupError, setSignupError] = useState("");
   const handleSignup = (data, e) => {
     console.log(data);
+
     createUser(data.email, data.password)
       .then((Result) => {
         setSignupError("");
+        updateUser(data.name);
         console.log(Result);
         e.target.reset();
         toast.success("Successfully Created!");

@@ -1,7 +1,10 @@
 import { format } from "date-fns";
-import React from "react";
+import React, { useContext } from "react";
+import toast from "react-hot-toast";
+import { AuthContext } from "../../../contexts/AuthProvider";
 
 const BookingModal = ({ treatment, selectedDate, setTreatment }) => {
+  const { user } = useContext(AuthContext);
   const { name, slots } = treatment;
 
   const handleOnSubmit = (e) => {
@@ -19,8 +22,19 @@ const BookingModal = ({ treatment, selectedDate, setTreatment }) => {
       selectedDate: `${format(selectedDate, "PP")}`,
     };
 
-    console.log(booking);
-    setTreatment(null);
+    fetch("http://localhost:5000/bookings", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(booking),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        setTreatment(null);
+        toast.success("Booking Confirmed");
+      });
   };
   return (
     <>
@@ -55,20 +69,25 @@ const BookingModal = ({ treatment, selectedDate, setTreatment }) => {
             <input
               name="username"
               type="text"
+              defaultValue={user?.displayName}
               placeholder="Name"
               className="input input-bordered input-md w-full"
+              disabled
             />
             <input
               name="email"
               type="text"
+              defaultValue={user?.email}
               placeholder="Email"
               className="input input-bordered input-md w-full"
+              disabled
             />
             <input
               name="phone"
               type="text"
               placeholder="Phone Number"
               className="input input-bordered input-md w-full"
+              required
             />
             <input
               className="btn btn-accent w-full"
