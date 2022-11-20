@@ -3,13 +3,14 @@ import React, { useContext } from "react";
 import toast from "react-hot-toast";
 import { AuthContext } from "../../../contexts/AuthProvider";
 
-const BookingModal = ({ treatment, selectedDate, setTreatment }) => {
+const BookingModal = ({ treatment, selectedDate, setTreatment, refetch }) => {
   const { user } = useContext(AuthContext);
   const { name, slots } = treatment;
 
   const handleOnSubmit = (e) => {
     e.preventDefault();
     const form = e.target;
+    const slot = form.slot.value;
     const username = form.username.value;
     const email = form.email.value;
     const phone = form.phone.value;
@@ -17,6 +18,7 @@ const BookingModal = ({ treatment, selectedDate, setTreatment }) => {
     const booking = {
       treatment: name,
       username: username,
+      slot,
       email: email,
       phone: phone,
       selectedDate: `${format(selectedDate, "PP")}`,
@@ -32,8 +34,13 @@ const BookingModal = ({ treatment, selectedDate, setTreatment }) => {
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
-        setTreatment(null);
-        toast.success("Booking Confirmed");
+        if (data.acknowledge) {
+          setTreatment(null);
+          toast.success("Booking Confirmed");
+          refetch();
+        } else {
+          toast.error(data.message);
+        }
       });
   };
   return (
@@ -59,7 +66,7 @@ const BookingModal = ({ treatment, selectedDate, setTreatment }) => {
               className="input input-bordered input-md w-full cursor-pointer font-semibold"
               disabled
             />
-            <select className="select select-bordered w-full">
+            <select name="slot" className="select select-bordered w-full">
               {slots.map((option, i) => (
                 <option value={option} key={i}>
                   {option}
